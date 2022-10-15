@@ -43,10 +43,10 @@ public class tennis {
             System.out.println("Ingrese bien la probabilidad del segundo jugador: ");
             probabilidadjugador2 = teclado.nextInt();
         }
-
+        jugarSet(set, jugador1, jugador2, torneo);
     }
 
-    static boolean jugarJuego(String j1, String j2) {
+    static boolean jugarJuego(String j1, String j2, String probabilidadjugador1, String probabilidadjugador2) {
 
         Random rnd = new Random();
         int marcadorJug1 = 0;
@@ -134,7 +134,52 @@ public class tennis {
         return ganador;
     }
 
+    static void jugarSet(float sets, String j1, String j2, String torneo) {
 
+
+        int juegosJug1 = 0;
+        int juegosJug2 = 0;
+        int setJug1 = 0;
+        int setJug2 = 0;
+        float set = sets;
+        boolean finPartido = false;
+
+        while (!finPartido) {
+            boolean resultadoJuego = jugarJuego(j1, j2);
+            if (resultadoJuego) {
+                juegosJug1 = juegosJug1 + 1;
+            }else {
+                juegosJug2 = juegosJug2 + 1;
+            }
+
+            if (juegosJug1 == 6 && juegosJug2 == 6) {
+                System.out.println("Tie Break");
+            }
+
+            if (juegosJug1 >= 6 && (Math.abs(juegosJug1 - juegosJug2) > 1) || juegosJug1 == 7 && juegosJug2 == 6) {
+                setJug1 = setJug1 + 1;
+                System.out.println(j1 + " gana el set por " + juegosJug1 + " a " + juegosJug2);
+                System.out.println();
+                juegosJug1 = 0;
+                juegosJug2 = 0;
+                if (setJug1 == set && setJug1 > setJug2) {
+                    System.out.println(j1 + " gana el partido por " + setJug1 + " sets a " + setJug2 + " en el torneo: " + torneo);
+                    finPartido = true;
+                }
+            }
+            if (juegosJug2 >= 6 && (Math.abs(juegosJug2 - juegosJug1) > 1) || juegosJug2 == 7 && juegosJug1 == 6) {
+                setJug2 = setJug2 + 1;
+                System.out.println(j2 + " gana el set por " + juegosJug2 + " a " + juegosJug1);
+                System.out.println();
+                juegosJug1 = 0;
+                juegosJug2 = 0;
+                if (setJug2 == set && setJug2 > setJug1) {
+                    System.out.println(j2 + " gana el partido por " + setJug2 + " sets a " + setJug1 + " en el torneo: " + torneo);
+                    finPartido = true;
+                }
+            }
+        }
+    }
 }
 
 
