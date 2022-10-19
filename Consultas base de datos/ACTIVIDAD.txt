@@ -1,40 +1,40 @@
 #Todos los productos del rubro "librería", creados hoy.
-SELECT * FROM producto AS pro
-INNER JOIN rubro AS rub 
-ON pro.id_rubro = rub.id_rubro
-WHERE rub.rubro = 'libreria' AND pro.fecha_creacion = CURDATE();
+SELECT * FROM producto
+INNER JOIN rubro
+ON producto.id_rubro = rubro.id_rubro
+WHERE rubro.rubro = 'libreria' AND producto.fecha_creacion = CURDATE();
 
 #Monto total vendido por cliente (mostrar nombre del cliente y monto)
-SELECT cli.nombre, SUM(ven.cantidad * ven.precio_unitario) AS 'monto total' FROM cliente AS cli
-INNER JOIN venta AS ven
-ON cli.id_cliente = ven.id_cliente
-GROUP BY cli.nombre, ven.id_cliente;
+SELECT cliente.nombre, SUM(venta.cantidad * venta.precio_unitario) AS 'monto total' FROM cliente
+INNER JOIN venta 
+ON cliente.id_cliente = venta.id_cliente
+GROUP BY cliente.nombre, venta.id_cliente;
 
 #Cantidad de ventas por producto.
-SELECT COUNT(*), pro.nombre FROM producto AS pro
-INNER JOIN venta AS ven
-ON ven.codigo_producto = pro.codigo
-GROUP BY pro.nombre;
+SELECT COUNT(*), producto.nombre FROM producto
+INNER JOIN venta
+ON venta.codigo_producto = producto.codigo
+GROUP BY nombre;
 
 #Cantidad de productos comprados por cliente en el mes actual.
-SELECT SUM(ven.cantidad), CONCAT(cli.nombre,'-',  cli.apellido), ven.fecha FROM cliente AS cli
-INNER JOIN venta AS ven
-ON cli.id_cliente = ven.id_cliente
-WHERE MONTH(ven.fecha) =  MONTH(CURDATE()) AND YEAR(ven.fecha) = YEAR(CURDATE())
-GROUP BY cli.nombre;
+SELECT SUM(venta.cantidad), CONCAT(cliente.nombre,'-',  cliente.apellido), venta.fecha FROM cliente
+INNER JOIN venta
+ON cliente.id_cliente = venta.id_cliente
+WHERE MONTH(venta.fecha) =  MONTH(CURDATE()) AND YEAR(venta.fecha) = YEAR(CURDATE())
+GROUP BY cliente.nombre;
 
 #Ventas que tienen al menos un producto del rubro "bazar".
-SELECT ven.id_venta, rub.rubro FROM venta AS ven
-INNER JOIN producto AS pro
-ON ven.codigo_producto = pro.codigo
-INNER JOIN rubro As rub
-ON rub.id_rubro = pro.id_rubro
-where rub.rubro = 'bazar';
+SELECT venta.id_venta, rubro.rubro FROM venta
+INNER JOIN producto
+ON venta.codigo_producto = producto.codigo
+INNER JOIN rubro
+ON rubro.id_rubro = producto.id_rubro
+where rubro.rubro = 'bazar';
 
 #Rubros que no tienen ventas en los últimos 2 meses.
-SELECT DISTINCT rub.rubro FROM venta AS ven
-INNER JOIN producto AS pro
-ON ven.codigo_producto = pro.codigo
-INNER JOIN rubro As rub
-ON rub.id_rubro = pro.id_rubro 
+SELECT DISTINCT rubro.rubro FROM venta
+INNER JOIN producto
+ON venta.codigo_producto = producto.codigo
+INNER JOIN rubro
+ON rubro.id_rubro = producto.id_rubro 
 where fecha <= DATE_FORMAT(CURDATE(), '%Y-%m-01') - INTERVAL 2 MONTH;
